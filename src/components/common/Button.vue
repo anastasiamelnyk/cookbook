@@ -39,5 +39,14 @@ export default {
   padding: 0 32px;
   height: 32px;
   cursor: pointer;
+  transition: background-color 0.3s, opacity 0.3s;
+
+  &:hover {
+    background-color: darken($accent-blue, 20%);
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
 }
 </style>

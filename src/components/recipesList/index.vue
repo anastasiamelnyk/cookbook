@@ -1,6 +1,6 @@
 <template>
   <div class="recipes-list">
-    <ListHeader class="mb-5" />
+    <ListHeader class="mb-10" />
     <ul class="recipes-list__list">
       <li
         v-for="item in 5"
