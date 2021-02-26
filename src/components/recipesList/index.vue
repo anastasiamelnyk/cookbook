@@ -1,19 +1,17 @@
 <template>
-  <Wrapper class="pt-15 home">
-    <RecipesList />
-  </Wrapper>
+  <div class="list">
+    <ListHeader />
+  </div>
 </template>
 
 <script>
-import Wrapper from '~components/common/Wrapper';
-import RecipesList from '~components/recipesList';
+import ListHeader from './ListHeader';
 
 export default {
-  name: 'Home',
+  name: 'RecipesList',
   props: {},
   components: {
-    Wrapper,
-    RecipesList,
+    ListHeader,
   },
   data: () => ({}),
   computed: {},

@@ -34,7 +34,7 @@ export default {
 .heading {
   font-weight: $extra-bold;
   font-size: 2rem;
-  line-height: 1.1;
+  line-height: 1.2;
   color: $black;
 
   &--h3 {
