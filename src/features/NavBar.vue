@@ -1,19 +1,22 @@
 <template>
-  <nav class="nav-bar">
+  <Wrapper tag="nav" class="nav-bar">
     <router-link to="/" class="nav-bar__logo">
       Cookbook
     </router-link>
     <span class="nav-bar__username">
       username
     </span>
-  </nav>
+  </Wrapper>
 </template>
 
 <script>
+import Wrapper from '~components/common/Wrapper';
 export default {
   name: 'NavBar',
   props: {},
-  components: {},
+  components: {
+    Wrapper,
+  },
   data: () => ({}),
   computed: {},
   methods: {},
@@ -26,7 +29,8 @@ export default {
 .nav-bar {
   background-color: $brown;
   color: $pink-gray;
-  padding: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -34,6 +38,27 @@ export default {
   &__logo {
     font-size: 1.5rem;
     font-weight: $light;
+    position: relative;
+    transition: opacity 0.3;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 2px;
+      bottom: 4px;
+      height: 1px;
+      width: 0%;
+      background-color: $pink-gray;
+      transition: width 0.3s;
+    }
+
+    &:hover::after {
+      width: 80%;
+    }
+
+    &:active {
+      opacity: 0.6;
+    }
   }
 
   &__username {
