@@ -15,5 +15,6 @@ module.exports = {
       .set('~components', path.join(__dirname, 'src/components'))
       .set('~features', path.join(__dirname, 'src/features'))
       .set('~assets', path.join(__dirname, 'src/assets'))
+      .set('~views', path.join(__dirname, 'src/views'))
   }
 };
