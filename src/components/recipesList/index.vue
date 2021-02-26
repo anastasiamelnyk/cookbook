@@ -1,17 +1,27 @@
 <template>
-  <div class="list">
-    <ListHeader />
+  <div class="recipes-list">
+    <ListHeader class="mb-5" />
+    <ul class="recipes-list__list">
+      <li
+        v-for="item in 5"
+        :key="item"
+        is="RecipeItem"
+        class="mb-3"
+      />
+    </ul>
   </div>
 </template>
 
 <script>
 import ListHeader from './ListHeader';
+import RecipeItem from './RecipeItem';
 
 export default {
   name: 'RecipesList',
   props: {},
   components: {
     ListHeader,
+    RecipeItem,
   },
   data: () => ({}),
   computed: {},
@@ -21,4 +31,11 @@ export default {
 
 <style lang="scss">
 @import '~assets/scss/_variables';
+
+.recipes-list {
+  &__list {
+    padding-left: 0;
+    margin: 0;
+  }
+}
 </style>
