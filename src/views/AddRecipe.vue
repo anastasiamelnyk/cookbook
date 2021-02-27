@@ -15,9 +15,7 @@ export default {
     Wrapper,
     Add,
   },
-  data: () => ({
-    test: '',
-  }),
+  data: () => ({}),
   computed: {},
   methods: {},
 };
