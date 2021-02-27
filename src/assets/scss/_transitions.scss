@@ -1,0 +1,21 @@
+// fade
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+// slide-error
+.slide-error-enter-active,
+.slide-error-leave-active {
+  height: 18px;
+  transition: height 0.2s;
+}
+
+.slide-error-leave-to,
+.slide-error-enter {
+  height: 0;
+}

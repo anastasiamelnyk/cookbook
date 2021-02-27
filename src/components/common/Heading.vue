@@ -35,7 +35,7 @@ export default {
   font-weight: $extra-bold;
   font-size: 2rem;
   line-height: 1.2;
-  color: $black;
+  color: $brown-black;
 
   &--h3 {
     font-size: 1.5rem;

@@ -2,6 +2,7 @@ const path = require('path');
 const postcssNormalize = require("postcss-normalize");
 
 module.exports = {
+  lintOnSave: false,
   css: {
     loaderOptions: {
       postcss: {

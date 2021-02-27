@@ -1,9 +1,9 @@
 <template>
   <div class="list-header">
-    <Heading>
+    <Heading class="list-header__heading">
       Your recipes
     </Heading>
-    <Button @click="addNewRecipe">
+    <Button @click="$router.push('/add')">
       Add new
     </Button>
   </div>
@@ -22,9 +22,7 @@ export default {
   },
   data: () => ({}),
   computed: {},
-  methods: {
-    addNewRecipe() {},
-  },
+  methods: {},
 };
 </script>
 
@@ -33,8 +31,21 @@ export default {
 
 .list-header {
   display: flex;
+  flex-flow: column;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+
+  &__heading {
+    margin-bottom: 8px;
+  }
+
+  @media (min-width: $media-xs-add) {
+    flex-flow: row;
+
+    &__heading {
+      margin-bottom: 0;
+    }
+  }
 }
 </style>
