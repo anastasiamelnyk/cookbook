@@ -1,18 +1,25 @@
 <template>
   <div class="recipes-list">
     <ListHeader class="mb-10" />
-    <ul class="recipes-list__list">
+    <ul
+      v-if="recipesList"
+      class="recipes-list__list"
+    >
       <li
-        v-for="item in 5"
-        :key="item"
+        v-for="(recipe, id) in recipesList"
+        :key="id"
         is="RecipeItem"
         class="mb-3"
       />
     </ul>
+    <p v-else class="recipes-list__no-items">
+      You have no recipes yet. Start adding some :)
+    </p>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import ListHeader from './ListHeader';
 import RecipeItem from './RecipeItem';
 
@@ -23,9 +30,18 @@ export default {
     ListHeader,
     RecipeItem,
   },
-  data: () => ({}),
+  data: () => ({
+    recipesList: {},
+  }),
   computed: {},
-  methods: {},
+  async created() {
+    this.recipesList = await this.getRecipesList();
+  },
+  methods: {
+    ...mapActions([
+      'getRecipesList',
+    ]),
+  },
 };
 </script>
 
@@ -36,6 +52,10 @@ export default {
   &__list {
     padding-left: 0;
     margin: 0;
+  }
+
+  &__no-items {
+    text-align: center;
   }
 }
 </style>

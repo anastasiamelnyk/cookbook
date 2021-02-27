@@ -51,19 +51,19 @@
         <div class="add-recipe__ingredient-wrapper">
           <Input
             v-model="ingredient.name"
-            name="ingredient-name"
+            :name="`ingredient-name-${index}`"
             label="Ingredient name"
           />
           <Input
             v-model="ingredient.quantity"
             type="number"
-            name="ingredient-quantity"
+            :name="`ingredient-quantity-${index}`"
             label="Quantity"
           />
           <div class="add-recipe__unit-wrapper">
             <Select
               v-model="ingredient.unit"
-              :options="ingredientsUnits"
+              :options="unitsFormatted"
               :class="{'mr-3': index === recipeData.ingredients.length - 1}"
             />
             <Button
@@ -93,7 +93,7 @@
         <Heading type="h4" class="mb-3">
           Cooking steps:
         </Heading>
-        <ol class="mb-6 add-recipe__steps">
+        <ol class="mb-2 add-recipe__steps">
           <li
             v-for="(step, index) in recipeData.cookingSteps"
             :key="index"
@@ -101,8 +101,8 @@
           >
             <div class="add-recipe__step-wrapper">
               <Input
-                v-model="step.value"
-                name="step"
+                v-model="step.description"
+                :name="`step-${index}`"
                 is-multiline
                 placeholder="Add a cooking step"
                 :rows="3"
@@ -120,10 +120,17 @@
         </ol>
       </div>
     </div>
+    <Button class="mb-8" @click="saveRecipe">
+      Save a recipe
+    </Button>
   </section>
 </template>
 
 <script>
+import moment from 'moment';
+import { mapGetters, mapActions } from 'vuex';
+import { deleteEmpty } from '~assets/js/utils';
+import { recipeModel, ingredientModel, cookingStepModel } from '~assets/js/models';
 import Input from '~components/common/Input';
 import Heading from '~components/common/Heading';
 import Button from '~components/common/Button';
@@ -139,74 +146,25 @@ export default {
     Select,
   },
   data: () => ({
-    recipeData: {
-      title: '',
-      img: '',
-      cookingTime: '',
-      portions: '',
-      ingredients: [],
-      description: '',
-      cookingSteps: [],
-    },
-    ingredientModel: {
-      name: '',
-      quantity: '',
-      unit: '',
-    },
-    cookingStepModel: {
-      number: null,
-      value: '',
-    },
-    ingredientsUnits: [
-      {
-        value: '',
-        displayValue: 'Select a unit',
-        disabled: true,
-      },
-      {
-        value: 'g',
-        displayValue: 'g',
-      },
-      {
-        value: 'mg',
-        displayValue: 'mg',
-      },
-      {
-        value: 'kg',
-        displayValue: 'kg',
-      },
-      {
-        value: 'oz',
-        displayValue: 'oz',
-      },
-      {
-        value: 'lb',
-        displayValue: 'lb',
-      },
-      {
-        value: 'ml',
-        displayValue: 'ml',
-      },
-      {
-        value: 'l',
-        displayValue: 'l',
-      },
-      {
-        value: 'tbsp',
-        displayValue: 'tbsp',
-      },
-      {
-        value: 'tsp',
-        displayValue: 'tsp',
-      },
-    ],
+    recipeData: recipeModel(),
+    ingredientModel: ingredientModel(),
+    cookingStepModel: cookingStepModel(),
   }),
-  computed: {},
+  computed: {
+    ...mapGetters([
+      'unitsFormatted',
+    ]),
+  },
   created() {
+    this.getUnits();
     if (!this.recipeData.ingredients.length) this.addNewIngredient();
     if (!this.recipeData.cookingSteps.length) this.addNewStep();
   },
   methods: {
+    ...mapActions([
+      'getUnits',
+      'addRecipe',
+    ]),
     addNewStep() {
       this.recipeData.cookingSteps = [
         ...this.recipeData.cookingSteps,
@@ -218,6 +176,20 @@ export default {
         ...this.recipeData.ingredients,
         { ...this.ingredientModel },
       ];
+    },
+    saveRecipe() {
+      debugger
+      const recipe = {
+        ...this.recipeData,
+        created: this.recipeData.created || moment.now().valueOf(),
+        modified: moment.now().valueOf(),
+        ingredients: deleteEmpty(this.recipeData.ingredients),
+        cookingSteps: deleteEmpty(this.recipeData.cookingSteps),
+      };
+
+      this.addRecipe(recipe)
+        .then(resp => { console.log(resp) })
+        .catch(err => { console.log(err) });
     },
   },
 };

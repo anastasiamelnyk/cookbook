@@ -12,9 +12,9 @@ const createInstance = baseURL => {
   });
 };
 
-const axiosInstance = createInstance(baseUrl);
+export const axiosInstanceStore = createInstance(baseUrl);
 
-export default {
+export const axiosInstance = {
   install() {
     Vue.prototype.$axios = axiosInstance
   }

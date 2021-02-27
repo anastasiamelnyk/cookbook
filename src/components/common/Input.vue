@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     isInputEmpty() {
-      return !this.value.length;
+      return !this.value || !this.value.length;
     },
   },
 };
