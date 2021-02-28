@@ -6,7 +6,7 @@
     <transition name="fade">
       <AddRecipe
         v-if="isAddModalShown"
-        @recipe-added="getRecipesList"
+        @recipe-saved="getRecipesList"
       />
     </transition>
   </div>
