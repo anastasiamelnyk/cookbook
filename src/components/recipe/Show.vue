@@ -2,40 +2,46 @@
   <article class="py-15 show">
     <div class="mb-4 show__header">
       <Heading>
-        {{ capitalizeFirstLetter(recipe.title) }}
+        {{ title }}
       </Heading>
-      <Button @click="$emit('edit', `${parent}/${recipe.id}`)">
+      <Button @click="$emit('edit', `${parent}/${recipe.id || $route.params.recipe}`)">
         Edit
       </Button>
     </div>
     <div class="mb-4 show__wrapper">
       <img
-        v-if="recipe.img"
-        :src="recipe.img"
-        :alt="`${recipe.title} image`"
+        v-if="localRecipe.img"
+        :src="localRecipe.img"
+        :alt="`${localRecipe.title} image`"
         class="show__image"
       />
       <section class="mb-4 show__brief">
         <p>
           <span class="mr-1 bold">Created:</span>
-          <span>{{ formatTime(recipe.created) }}</span>
+          <span>{{ formatTime(localRecipe.created) }}</span>
         </p>
         <p>
           <span class="mr-1 bold">Modified:</span>
-          <span>{{ formatTime(recipe.modified) }}</span>
+          <span>{{ formatTime(localRecipe.modified) }}</span>
         </p>
-        <p v-if="recipe.cookingTime">
+        <Select
+          v-if="versions.length"
+          v-model="currentVersion"
+          :options="versions"
+          class="mb-1"
+        ></Select>
+        <p v-if="localRecipe.cookingTime">
           <span class="mr-1 bold">Cooking time:</span>
-          <span>{{ recipe.cookingTime }}</span>
+          <span>{{ localRecipe.cookingTime }}</span>
         </p>
-        <p v-if="recipe.portions">
+        <p v-if="localRecipe.portions">
           <span class="mr-1 bold">Portions:</span>
-          <span>{{ recipe.portions }}</span>
+          <span>{{ localRecipe.portions }}</span>
         </p>
       </section>
     </div>
     <section
-      v-if="recipe.ingredients && recipe.ingredients.length"
+      v-if="localRecipe.ingredients && localRecipe.ingredients.length"
       class="mb-4 show__ingredents"
     >
       <Heading type="h4" class="mb-1">
@@ -43,7 +49,7 @@
       </Heading>
       <ul>
         <li
-          v-for="ingredient in recipe.ingredients"
+          v-for="ingredient in localRecipe.ingredients"
           :key="ingredient.name"
         >
           <span class="mr-1">{{ ingredient.name }}:</span>
@@ -53,18 +59,18 @@
       </ul>
     </section>
     <section
-      v-if="recipe.description"
+      v-if="localRecipe.description"
       class="mb-4 show__description"
     >
       <Heading type="h4" class="mb-1">
         Description:
       </Heading>
       <p>
-        {{ recipe.description }}
+        {{ localRecipe.description }}
       </p>
     </section>
     <section
-      v-if="recipe.cookingSteps && recipe.cookingSteps.length"
+      v-if="localRecipe.cookingSteps && localRecipe.cookingSteps.length"
       class="mb-15 show__steps"
     >
       <Heading type="h4" class="mb-1">
@@ -72,7 +78,7 @@
       </Heading>
       <ol>
         <li
-          v-for="step in recipe.cookingSteps"
+          v-for="step in localRecipe.cookingSteps"
           :key="step.description"
         >
           {{ step.description }}
@@ -81,7 +87,7 @@
     </section>
     <section class="show__related">
       <RecipesList
-        :list="recipe.relatedRecipes || []"
+        :list="localRecipe.relatedRecipes || []"
         :parent="`${parent}/${recipeId}/relatedRecipes`"
         is-related
       />
@@ -94,6 +100,7 @@ import moment from 'moment';
 import { capitalizeFirstLetter } from '~assets/js/utils';
 import Heading from '~components/common/Heading';
 import Button from '~components/common/Button';
+import Select from '~components/common/Select';
 import RecipesList from '~components/recipesList';
 
 export default {
@@ -111,20 +118,62 @@ export default {
   components: {
     Heading,
     Button,
+    Select,
     RecipesList,
   },
-  data: () => ({}),
+  data: () => ({
+    versions: [],
+    currentVersion: '',
+    localRecipe: {},
+  }),
   computed: {
     recipeId() {
-      return this.recipe.id || this.$route.params.recipe;
+      return this.localRecipe.id || this.$route.params.recipe;
+    },
+    title() {
+      return this.localRecipe.title
+        ? capitalizeFirstLetter(this.localRecipe.title)
+        : '';
     },
   },
-  created() {},
+  watch: {
+    currentVersion(value) {
+      if (value) {
+        this.localRecipe = {
+          ...this.localRecipe,
+          ...this.localRecipe.versions[value],
+        };
+      }
+    },
+    recipe: {
+      handler(value) {
+        if (value) this.localRecipe = { ...value };
+        if (value.versions) this.createVersions();
+      },
+      immediate: true,
+    },
+  },
   methods: {
     capitalizeFirstLetter,
     formatTime(time) {
       return moment(time).format('DD MMM YYYY, HH:mm')
     },
+    createVersions() {
+      this.versions = [
+      ...Object.keys(this.recipe.versions)
+        .map((time, index) => ({
+          id: index,
+          value: time,
+          displayValue: this.formatTime(Number(time))
+        })),
+      {
+        id: this.recipe.versions + 1,
+        value: '',
+        displayValue: 'Select version',
+        disabled: true
+      },
+    ];
+  },
   },
 };
 </script>

@@ -73,7 +73,7 @@ export default {
     ]),
     editRecipe(parentPath) {
       this.isEditing = true;
-      this.setParentPath(parentPath || `${this.currentRecipe}`);
+      this.setParentPath(parentPath);
     },
   },
 };

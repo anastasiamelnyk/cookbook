@@ -161,7 +161,7 @@ export default {
       cookingStepModel: cookingStepModel(),
       recipeData: isEmpty(this.recipe)
         ? recipeModel()
-        : this.recipe,
+        : { ...this.recipe },
       savedRecipeInfo: {},
     }
   },
@@ -172,6 +172,11 @@ export default {
   },
   created() {
     this.getUnits();
+    if (this.isEditing) {
+      const recipeInfo = { ...this.recipe };
+      delete recipeInfo.relatedRecipes;
+      this.savedRecipeInfo = recipeInfo;
+    }
     if (!this.recipeData.ingredients
       || !this.recipeData.ingredients.length) {
         this.$set(this.recipeData, 'ingredients', []);
@@ -181,11 +186,6 @@ export default {
     || !this.recipeData.cookingSteps.length) {
         this.$set(this.recipeData, 'cookingSteps', []);
         this.addNewStep();
-    }
-    if (this.isEditing) {
-      const recipeInfo = { ...this.recipe };
-      delete recipeInfo.relatedRecipes;
-      this.savedRecipeInfo = recipeInfo;
     }
   },
   methods: {
@@ -229,16 +229,13 @@ export default {
     createRecipe(recipe) {
       this.addRecipe(recipe)
         .then(() => {
-          this.setAddModalShown(false);
           this.$emit('recipe-saved');
+          this.setAddModalShown(false);
         })
         .catch(err => { console.log(err) });
     },
     updateRecipe(recipe) {
       this.editRecipe({recipe, parent: this.$route.params.recipe})
-        .then(() => {
-          this.$emit('recipe-saved');
-        })
         .catch(err => { console.log(err) });
     },
   },

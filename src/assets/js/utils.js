@@ -3,9 +3,7 @@ export const deleteEmpty = arr => arr.filter(item => {
   else return Object.values(item).some(cur => cur);
 });
 
-export const capitalizeFirstLetter = text => text
-  ? `${text.charAt(0).toUpperCase()}${text.slice(1)}`
-  : '';
+export const capitalizeFirstLetter = text => `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
 
 export const objToArr = obj => obj
   ? Object.entries(obj)
