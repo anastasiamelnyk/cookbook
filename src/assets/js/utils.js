@@ -3,4 +3,15 @@ export const deleteEmpty = arr => arr.filter(item => {
   else return Object.values(item).some(cur => cur);
 });
 
-export const capitalizeFirstLetter = text => `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
+export const capitalizeFirstLetter = text => text
+  ? `${text.charAt(0).toUpperCase()}${text.slice(1)}`
+  : '';
+
+export const objToArr = obj => Object.entries(obj)
+  .map(([key, values]) => ({ ...values, id: key }));
+
+export const sortAlphabetically = (arr, field) => arr.sort((a, b) => {
+  if(a[field] < b[field]) return -1;
+  if(a[field] > b[field]) return 1;
+  return 0;
+});

@@ -1,10 +1,11 @@
 <template>
   <Wrapper
-    class="py-10 add"
+    class="py-10 add-recipe"
     @click.native="setAddModalShown(false)"
   >
     <Add
-      class="add__component"
+      class="add-recipe__component"
+      @recipe-added="$emit('recipe-added')"
       @click.native.stop
     />
   </Wrapper>
@@ -35,20 +36,29 @@ export default {
 <style lang="scss">
 @import '~assets/scss/_variables';
 
-.add {
-  position: absolute;
+.add-recipe {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   min-height: 100vh;
+  height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
   background-color: rgba($black, 0.9);
+  overflow-y: auto;
 
   &__component {
     flex-grow: 1;
     background-color: #fff;
+    padding: 0 16px 24px 16px;
+    height: max-content;
+  }
+
+  @media (min-width: $media-sm) {
+    &__component {
+      padding: 0 56px 24px 56px;
+    }
   }
 }
 </style>

@@ -1,47 +1,66 @@
 <template>
   <div class="recipes-list">
-    <ListHeader class="mb-10" />
+    <ListHeader
+      :is-related="isRelated"
+      class="mb-10"
+      @add-new="showAddModal"
+    />
     <ul
-      v-if="recipesList"
+      v-if="list.length"
       class="recipes-list__list"
     >
       <li
-        v-for="(recipe, id) in recipesList"
-        :key="id"
+        v-for="recipe in list"
+        :key="recipe.id"
         :recipe="recipe"
+        :is-related="isRelated"
+        :parent="parent"
         is="RecipeItem"
-        class="mb-3"
+        class="mb-4"
       />
     </ul>
     <p v-else class="recipes-list__no-items">
-      You have no recipes yet. Start adding some :)
+      No {{ isRelated ? 'related' : '' }} recipes yet. Start adding some :)
     </p>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapMutations } from 'vuex';
 import ListHeader from './ListHeader';
 import RecipeItem from './RecipeItem';
 
 export default {
   name: 'RecipesList',
-  props: {},
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+    isRelated: {
+      type: Boolean,
+      default: false,
+    },
+    parent: {
+      type: String,
+      default: '',
+    },
+  },
   components: {
     ListHeader,
     RecipeItem,
   },
-  data: () => ({
-    recipesList: {},
-  }),
+  data: () => ({}),
   computed: {},
-  async created() {
-    this.recipesList = await this.getRecipesList();
-  },
   methods: {
-    ...mapActions([
-      'getRecipesList',
+    ...mapMutations([
+      'setAddModalShown',
+      'setParentPath',
     ]),
+    showAddModal() {
+      this.setParentPath(this.parent);
+      this.setAddModalShown(true);
+    },
   },
 };
 </script>

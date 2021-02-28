@@ -1,26 +1,45 @@
 <template>
   <div class="recipe-item">
-    <div class="recipe-item__breefs">
-      <img
-        :src="recipe.img"
-        :alt="`${recipe.title} image`"
-        class="mr-4 recipe-item__image"
-      />
+    <div
+      class="recipe-item__wrapper"
+      :class="{
+        'recipe-item__wrapper--related': isRelated,
+        'recipe-item__wrapper--related-opened': isFullRelatedShown,
+      }"
+      @click="showRecipe"
+    >
+      <div class="recipe-item__breefs">
+        <img
+          :src="recipe.img"
+          :alt="`${recipe.title} image`"
+          class="mr-4 recipe-item__image"
+        />
+        <div>
+          <Heading type="h4" class="recipe-item__heading">
+            {{ capitalizeFirstLetter(recipe.title) }}
+          </Heading>
+          <p class="recipe-item__info">
+            <span class="bold">Cooking time:</span> <span>{{ recipe.cookingTime }}</span>
+          </p>
+          <p class="recipe-item__info">
+            <span class="bold">Portions:</span> <span>{{ recipe.portions }}</span>
+          </p>
+        </div>
+      </div>
       <div>
-        <Heading type="h4" class="recipe-item__heading">
-          {{ capitalizeFirstLetter(recipe.title) }}
-        </Heading>
-        <p class="recipe-item__info">
-          <span class="bold">Cooking time:</span> <span>{{ recipe.cookingTime }}</span>
-        </p>
-        <p class="recipe-item__info">
-          <span class="bold">Portions:</span> <span>{{ recipe.portions }}</span>
-        </p>
+        {{ recipe.description | shorten(100) }}
       </div>
     </div>
-    <div>
-      {{ recipe.description | shorten(100) }}
-    </div>
+    <template v-if="isRelated">
+      <transition name="fade">
+        <Show
+          v-if="isFullRelatedShown"
+          :recipe="recipe"
+          :parent="parent"
+          class="px-6 recipe-item__related"
+        />
+      </transition>
+    </template>
   </div>
 </template>
 
@@ -35,14 +54,29 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    isRelated: {
+      type: Boolean,
+      default: false,
+    },
+    parent: {
+      type: String,
+      default: '',
+    },
   },
   components: {
     Heading,
+    Show: () => import('~components/recipe/Show'),
   },
-  data: () => ({}),
+  data: () => ({
+    isFullRelatedShown: false,
+  }),
   computed: {},
   methods: {
     capitalizeFirstLetter,
+    showRecipe() {
+      if (this.isRelated) this.isFullRelatedShown = !this.isFullRelatedShown;
+      else this.$router.push(`/${this.recipe.id}`);
+    },
   },
   filters: {
     shorten(value, charsQuantity) {
@@ -60,11 +94,22 @@ export default {
 @import '~assets/scss/_variables';
 
 .recipe-item {
-  display: flex;
-  flex-flow: column;
-  padding: 8px 0;
-  box-shadow: 0 1px 2px 0 $pink-gray;
-  cursor: pointer;
+  &__wrapper {
+    display: flex;
+    flex-flow: column;
+    padding: 8px 0;
+    box-shadow: 0 1px 2px 0 $pink-gray;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &--related {
+      background-color: rgba($pink-gray, 0.3);
+
+      &-opened {
+        background-color: rgba($pink-gray, 0.45);
+      }
+    }
+  }
 
   &__breefs {
     display: flex;
@@ -83,6 +128,10 @@ export default {
     display: none;
   }
 
+  &__related {
+    background-color: rgba($pink-gray, 0.15);
+  }
+
   @media (min-width: $media-xs-add) {
     &__info {
       display: block;
@@ -94,7 +143,9 @@ export default {
   }
 
   @media (min-width: $media-sm) {
-    flex-flow: row;
+    &__wrapper {
+      flex-flow: row;
+    }
 
     &__breefs {
       margin-right: 32px;
@@ -103,6 +154,7 @@ export default {
     &__heading,
     &__info {
       width: max-content;
+      max-width: 200px;
     }
   }
 }
