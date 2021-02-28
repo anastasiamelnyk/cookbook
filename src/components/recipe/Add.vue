@@ -236,6 +236,7 @@ export default {
     },
     updateRecipe(recipe) {
       this.editRecipe({recipe, parent: this.$route.params.recipe})
+        .then(() => { this.$emit('recipe-saved') })
         .catch(err => { console.log(err) });
     },
   },

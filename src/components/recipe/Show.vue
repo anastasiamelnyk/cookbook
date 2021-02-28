@@ -139,10 +139,14 @@ export default {
   watch: {
     currentVersion(value) {
       if (value) {
-        this.localRecipe = {
-          ...this.localRecipe,
-          ...this.localRecipe.versions[value],
-        };
+        if (value === 'latest') {
+          this.localRecipe = { ...this.recipe };
+        } else {
+          this.localRecipe = {
+            ...this.recipe.versions[value],
+            relatedRecipes: this.recipe.relatedRecipes,
+          };
+        }
       }
     },
     recipe: {
@@ -166,12 +170,17 @@ export default {
           value: time,
           displayValue: this.formatTime(Number(time))
         })),
-      {
-        id: this.recipe.versions + 1,
-        value: '',
-        displayValue: 'Select version',
-        disabled: true
-      },
+        {
+          id: this.recipe.versions + 2,
+          value: 'latest',
+          displayValue: 'Latest version',
+        },
+        {
+          id: this.recipe.versions + 1,
+          value: '',
+          displayValue: 'Select version',
+          disabled: true
+        },
     ];
   },
   },
