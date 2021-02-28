@@ -106,7 +106,6 @@
               placeholder="Add a cooking step"
               :rows="3"
               :class="{'mr-3': index === recipeData.cookingSteps.length - 1}"
-              @input="step.number = step.number ? step.number : index"
             />
             <Button
               v-if="index === recipeData.cookingSteps.length - 1"
@@ -123,7 +122,7 @@
       class="add__save"
       @click="saveRecipe"
     >
-      Save a recipe
+      {{ isEditing ? 'Edit' : 'Save a' }} recipe
     </Button>
   </section>
 </template>
@@ -131,7 +130,7 @@
 <script>
 import moment from 'moment';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
-import { deleteEmpty } from '~assets/js/utils';
+import { deleteEmpty, isEmpty } from '~assets/js/utils';
 import { recipeModel, ingredientModel, cookingStepModel } from '~assets/js/models';
 import Input from '~components/common/Input';
 import Heading from '~components/common/Heading';
@@ -140,18 +139,32 @@ import Select from '~components/common/Select';
 
 export default {
   name: 'Add',
-  props: {},
+  props: {
+    recipe: {
+      type: Object,
+      default: () => ({}),
+    },
+    isEditing: {
+      type: Boolean,
+      default: false,
+    },
+  },
   components: {
     Input,
     Heading,
     Button,
     Select,
   },
-  data: () => ({
-    recipeData: recipeModel(),
-    ingredientModel: ingredientModel(),
-    cookingStepModel: cookingStepModel(),
-  }),
+  data() {
+    return {
+      ingredientModel: ingredientModel(),
+      cookingStepModel: cookingStepModel(),
+      recipeData: isEmpty(this.recipe)
+        ? recipeModel()
+        : this.recipe,
+      savedRecipeInfo: {},
+    }
+  },
   computed: {
     ...mapGetters([
       'unitsFormatted',
@@ -159,17 +172,30 @@ export default {
   },
   created() {
     this.getUnits();
-    if (!this.recipeData.ingredients.length) this.addNewIngredient();
-    if (!this.recipeData.cookingSteps.length) this.addNewStep();
+    if (!this.recipeData.ingredients
+      || !this.recipeData.ingredients.length) {
+        this.$set(this.recipeData, 'ingredients', []);
+        this.addNewIngredient();
+    }
+    if (!this.recipeData.cookingSteps
+    || !this.recipeData.cookingSteps.length) {
+        this.$set(this.recipeData, 'cookingSteps', []);
+        this.addNewStep();
+    }
+    if (this.isEditing) {
+      const recipeInfo = { ...this.recipe };
+      delete recipeInfo.relatedRecipes;
+      this.savedRecipeInfo = recipeInfo;
+    }
   },
   methods: {
     ...mapActions([
       'getUnits',
       'addRecipe',
+      'editRecipe',
     ]),
     ...mapMutations([
       'setAddModalShown',
-      'setParentPath',
     ]),
     addNewStep() {
       this.recipeData.cookingSteps = [
@@ -184,19 +210,34 @@ export default {
       ];
     },
     saveRecipe() {
+      const now = moment.now().valueOf();
       const recipe = {
         ...this.recipeData,
-        created: this.recipeData.created || moment.now().valueOf(),
-        modified: moment.now().valueOf(),
+        created: this.recipeData.created || now,
+        modified: now,
         ingredients: deleteEmpty(this.recipeData.ingredients),
         cookingSteps: deleteEmpty(this.recipeData.cookingSteps),
+        versions: {
+          ...this.recipeData.versions,
+          [now]: this.savedRecipeInfo,
+        },
       };
 
+      if (this.isEditing) this.updateRecipe(recipe);
+      else this.createRecipe(recipe);
+    },
+    createRecipe(recipe) {
       this.addRecipe(recipe)
         .then(() => {
           this.setAddModalShown(false);
-          this.setParentPath('');
-          this.$emit('recipe-added');
+          this.$emit('recipe-saved');
+        })
+        .catch(err => { console.log(err) });
+    },
+    updateRecipe(recipe) {
+      this.editRecipe({recipe, parent: this.$route.params.recipe})
+        .then(() => {
+          this.$emit('recipe-saved');
         })
         .catch(err => { console.log(err) });
     },

@@ -19,6 +19,5 @@ export const ingredientModel = () => ({
 });
 
 export const cookingStepModel = () => ({
-  number: '',
   description: '',
 });

@@ -1,29 +1,20 @@
 <template>
   <div>
-    <Wrapper>
-      <transition name="fade">
-        <component
-          :is="currentComponent"
-          :recipe="recipeFormatted"
-          @edit="isEditing = true"
-        />
-      </transition>
-    </Wrapper>
+    <Recipe />
     <transition name="fade">
       <AddRecipe
         v-if="isAddModalShown"
-        @recipe-added="getRecipe(currentRecipe)"
+        @recipe-saved="getRecipe(currentRecipe)"
       />
     </transition>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Wrapper from '~components/common/Wrapper';
 import AddRecipe from './AddRecipe';
-import Show from '~components/recipe/Show';
-import Add from '~components/recipe/Add';
+import Recipe from '~components/recipe/';
 
 export default {
   name: 'ShowRecipe',
@@ -31,29 +22,16 @@ export default {
   components: {
     Wrapper,
     AddRecipe,
-    Show,
-    Add,
+    Recipe,
   },
-  data: () => ({
-    isEditing: false,
-    recipe: {},
-  }),
+  data: () => ({}),
   computed: {
     ...mapState([
       'isAddModalShown',
     ]),
-    ...mapGetters([
-      'recipeFormatted'
-    ]),
-    currentComponent() {
-      return this.isEditing ? 'Add' : 'Show';
-    },
     currentRecipe() {
       return this.$route.params.recipe;
     },
-  },
-  created() {
-    this.getRecipe(this.currentRecipe);
   },
   methods: {
     ...mapActions([

@@ -32,10 +32,22 @@ const mutations = {
 };
 
 const actions = {
-  addRecipe({ state }, payload) {
+  addRecipe({ state, commit }, payload) {
     return $axios.post(`/recipes${state.parentPath}.json`, payload)
-      .then(result => result)
+      .then(result => {
+        commit('setParentPath', '');
+        return result;
+      })
       .catch(err => { Promise.reject(err) });
+  },
+  editRecipe({ state, commit, dispatch }, payload) {
+    return $axios.put(`/recipes${state.parentPath}.json`, payload.recipe)
+    .then(result => {
+      dispatch('getRecipe', payload.parent)
+      commit('setParentPath', '');
+      return result;
+    })
+    .catch(err => { Promise.reject(err) });
   },
   getRecipe({ commit }, payload) {
     return $axios.get(`/recipes/${payload}.json`)

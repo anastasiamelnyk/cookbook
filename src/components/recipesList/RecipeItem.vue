@@ -29,7 +29,7 @@
     </div>
     <template v-if="isRelated">
       <transition name="fade">
-        <Show
+        <Recipe
           v-if="isFullRelatedShown"
           :recipe="recipe"
           :parent="parent"
@@ -62,7 +62,7 @@ export default {
   },
   components: {
     Heading,
-    Show: () => import('~components/recipe/Show'),
+    Recipe: () => import('~components/recipe'),
   },
   data: () => ({
     isFullRelatedShown: false,

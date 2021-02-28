@@ -5,7 +5,7 @@
   >
     <Add
       class="add-recipe__component"
-      @recipe-added="$emit('recipe-added')"
+      @recipe-saved="$emit('recipe-saved')"
       @click.native.stop
     />
   </Wrapper>

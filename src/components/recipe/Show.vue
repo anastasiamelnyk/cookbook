@@ -4,7 +4,7 @@
       <Heading>
         {{ capitalizeFirstLetter(recipe.title) }}
       </Heading>
-      <Button @click="$emit('edit')">
+      <Button @click="$emit('edit', `${parent}/${recipe.id}`)">
         Edit
       </Button>
     </div>
@@ -73,7 +73,7 @@
       <ol>
         <li
           v-for="step in recipe.cookingSteps"
-          :key="step.number"
+          :key="step.description"
         >
           {{ step.description }}
         </li>
