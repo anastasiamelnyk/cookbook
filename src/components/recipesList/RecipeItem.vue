@@ -2,10 +2,7 @@
   <div class="recipe-item">
     <div
       class="recipe-item__wrapper"
-      :class="{
-        'recipe-item__wrapper--related': isRelated,
-        'recipe-item__wrapper--related-opened': isFullRelatedShown,
-      }"
+      :class="{ 'recipe-item__wrapper--related-opened': isFullRelatedShown }"
       @click="showRecipe"
     >
       <div class="recipe-item__breefs">
@@ -18,10 +15,10 @@
           <Heading type="h4" class="recipe-item__heading">
             {{ capitalizeFirstLetter(recipe.title) }}
           </Heading>
-          <p class="recipe-item__info">
+          <p v-if="recipe.cookingTime" class="recipe-item__info">
             <span class="bold">Cooking time:</span> <span>{{ recipe.cookingTime }}</span>
           </p>
-          <p class="recipe-item__info">
+          <p v-if="recipe.portions" class="recipe-item__info">
             <span class="bold">Portions:</span> <span>{{ recipe.portions }}</span>
           </p>
         </div>
@@ -102,12 +99,8 @@ export default {
     cursor: pointer;
     transition: background-color 0.3s;
 
-    &--related {
-      background-color: rgba($pink-gray, 0.3);
-
-      &-opened {
-        background-color: rgba($pink-gray, 0.45);
-      }
+    &--related-opened {
+      background-color: rgba($pink-gray, 0.5);
     }
   }
 
