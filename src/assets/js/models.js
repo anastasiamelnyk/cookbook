@@ -9,7 +9,7 @@ export const recipeModel = () => ({
   created: null,
   modified: null,
   versions: {},
-  relatedRecipes: [],
+  relatedRecipes: {},
 });
 
 export const ingredientModel = () => ({

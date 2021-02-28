@@ -11,6 +11,7 @@ const $axios = axiosInstanceStore;
 export default new Vuex.Store({
   state: {
     unitsOfMeasure: {},
+    isAddModalShown: false,
   },
   getters: {
     unitsFormatted: state => Object.entries(state.unitsOfMeasure)
@@ -19,6 +20,9 @@ export default new Vuex.Store({
   mutations: {
     setUnits(state, payload) {
       state.unitsOfMeasure = payload;
+    },
+    setAddModalShown(state, payload) {
+      state.isAddModalShown = payload;
     },
   },
   actions: {

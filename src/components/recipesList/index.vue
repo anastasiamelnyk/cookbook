@@ -8,6 +8,7 @@
       <li
         v-for="(recipe, id) in recipesList"
         :key="id"
+        :recipe="recipe"
         is="RecipeItem"
         class="mb-3"
       />

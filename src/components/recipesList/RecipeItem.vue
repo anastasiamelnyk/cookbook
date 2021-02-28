@@ -2,48 +2,48 @@
   <div class="recipe-item">
     <div class="recipe-item__breefs">
       <img
-        src="https://picsum.photos/200/300"
-        alt="Recipe image"
+        :src="recipe.img"
+        :alt="`${recipe.title} image`"
         class="mr-4 recipe-item__image"
       />
       <div>
         <Heading type="h4" class="recipe-item__heading">
-          Recipe Name
+          {{ capitalizeFirstLetter(recipe.title) }}
         </Heading>
         <p class="recipe-item__info">
-          <span class="bold">Cooking time:</span>
-          <span>&nbsp;1,5&nbsp;hours</span>
+          <span class="bold">Cooking time:</span> <span>{{ recipe.cookingTime }}</span>
         </p>
         <p class="recipe-item__info">
-          <span class="bold">Portions:</span>
-          <span>&nbsp;8</span>
+          <span class="bold">Portions:</span> <span>{{ recipe.portions }}</span>
         </p>
       </div>
     </div>
     <div>
-      {{ description | shorten(100) }}
+      {{ recipe.description | shorten(100) }}
     </div>
   </div>
 </template>
 
 <script>
+import { capitalizeFirstLetter } from '~assets/js/utils';
 import Heading from '~components/common/Heading';
 
 export default {
   name: 'RecipeItem',
-  props: {},
+  props: {
+    recipe: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
   components: {
     Heading,
   },
-  data: () => ({
-    description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-      Distinctio blanditiis quod voluptates possimus,
-      magnam ab fugit provident consequuntur temporibus
-      corrupti repellendus sint voluptatibus minus alias nemo aliquid.
-      Ex, porro commodi.`,
-  }),
+  data: () => ({}),
   computed: {},
-  methods: {},
+  methods: {
+    capitalizeFirstLetter,
+  },
   filters: {
     shorten(value, charsQuantity) {
       if (!value) return '';
@@ -64,6 +64,7 @@ export default {
   flex-flow: column;
   padding: 8px 0;
   box-shadow: 0 1px 2px 0 $pink-gray;
+  cursor: pointer;
 
   &__breefs {
     display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-15 add-recipe">
+  <section class="add-recipe">
     <Input
       v-model="recipeData.title"
       name="title"
@@ -128,7 +128,7 @@
 
 <script>
 import moment from 'moment';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { deleteEmpty } from '~assets/js/utils';
 import { recipeModel, ingredientModel, cookingStepModel } from '~assets/js/models';
 import Input from '~components/common/Input';
@@ -165,6 +165,9 @@ export default {
       'getUnits',
       'addRecipe',
     ]),
+    ...mapMutations([
+      'setAddModalShown',
+    ]),
     addNewStep() {
       this.recipeData.cookingSteps = [
         ...this.recipeData.cookingSteps,
@@ -178,7 +181,6 @@ export default {
       ];
     },
     saveRecipe() {
-      debugger
       const recipe = {
         ...this.recipeData,
         created: this.recipeData.created || moment.now().valueOf(),
@@ -188,7 +190,7 @@ export default {
       };
 
       this.addRecipe(recipe)
-        .then(resp => { console.log(resp) })
+        .then(() => { this.setAddModalShown(false) })
         .catch(err => { console.log(err) });
     },
   },
@@ -199,6 +201,8 @@ export default {
 @import '~assets/scss/_variables';
 
 .add-recipe {
+  padding: 56px 16px 24px 16px;
+
   ul,
   ol {
     margin: 0;
@@ -253,6 +257,8 @@ export default {
   }
 
   @media (min-width: $media-sm) {
+    padding: 56px 56px 24px 56px;
+
     &__brief {
       display: grid;
       align-items: center;

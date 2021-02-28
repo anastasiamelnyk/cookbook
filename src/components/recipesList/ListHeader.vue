@@ -3,13 +3,14 @@
     <Heading class="list-header__heading">
       Your recipes
     </Heading>
-    <Button @click="$router.push('/add')">
+    <Button @click="setAddModalShown(true)">
       Add new
     </Button>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import Heading from '~components/common/Heading';
 import Button from '~components/common/Button';
 
@@ -22,7 +23,11 @@ export default {
   },
   data: () => ({}),
   computed: {},
-  methods: {},
+  methods: {
+    ...mapMutations([
+      'setAddModalShown',
+    ]),
+  },
 };
 </script>
 
