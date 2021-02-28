@@ -1,19 +1,19 @@
 <template>
-  <section class="add-recipe">
+  <section class="py-15 add">
     <Input
       v-model="recipeData.title"
       name="title"
       label="Recipe title"
       is-bigger
     />
-    <div class="add-recipe__brief">
+    <div class="add__brief">
       <transition name="fade">
-        <div class="mb-4 add-recipe__img-wrapper">
+        <div class="mb-4 add__img-wrapper">
           <img
             v-if="recipeData.img"
             :src="recipeData.img"
             :alt="`${recipeData.title} image`"
-            class="add-recipe__image"
+            class="add__image"
           />
           <span v-else>
             Yummy image
@@ -42,13 +42,13 @@
     <Heading type="h4" class="mb-3">
       Ingredients:
     </Heading>
-    <ul class="mb-6 add-recipe__ingredients">
+    <ul class="mb-6 add__ingredients">
       <li
         v-for="(ingredient, index) in recipeData.ingredients"
         :key="index"
-        class="add-recipe__ingredient"
+        class="add__ingredient"
       >
-        <div class="add-recipe__ingredient-wrapper">
+        <div class="add__ingredient-wrapper">
           <Input
             v-model="ingredient.name"
             :name="`ingredient-name-${index}`"
@@ -60,7 +60,7 @@
             :name="`ingredient-quantity-${index}`"
             label="Quantity"
           />
-          <div class="add-recipe__unit-wrapper">
+          <div class="add__unit-wrapper">
             <Select
               v-model="ingredient.unit"
               :options="unitsFormatted"
@@ -75,7 +75,7 @@
         </div>
       </li>
     </ul>
-    <div class="add-recipe__text">
+    <div class="add__text">
       <div>
         <Heading type="h4" class="mb-3">
           Description:
@@ -86,20 +86,20 @@
           placeholder="Add some description"
           is-multiline
           :rows="3"
-          class="add-recipe__description"
+          class="add__description"
         />
       </div>
       <div>
         <Heading type="h4" class="mb-3">
           Cooking steps:
         </Heading>
-        <ol class="mb-2 add-recipe__steps">
+        <ol class="mb-2 add__steps">
           <li
             v-for="(step, index) in recipeData.cookingSteps"
             :key="index"
-            class="add-recipe__step"
+            class="add__step"
           >
-            <div class="add-recipe__step-wrapper">
+            <div class="add__step-wrapper">
               <Input
                 v-model="step.description"
                 :name="`step-${index}`"
@@ -137,7 +137,7 @@ import Button from '~components/common/Button';
 import Select from '~components/common/Select';
 
 export default {
-  name: 'AddRecipe',
+  name: 'Add',
   props: {},
   components: {
     Input,
@@ -200,9 +200,7 @@ export default {
 <style lang="scss">
 @import '~assets/scss/_variables';
 
-.add-recipe {
-  padding: 56px 16px 24px 16px;
-
+.add {
   ul,
   ol {
     margin: 0;
@@ -257,8 +255,6 @@ export default {
   }
 
   @media (min-width: $media-sm) {
-    padding: 56px 56px 24px 56px;
-
     &__brief {
       display: grid;
       align-items: center;

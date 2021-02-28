@@ -11,6 +11,7 @@
         :recipe="recipe"
         is="RecipeItem"
         class="mb-3"
+        @click.native="$router.push(`/${id}`)"
       />
     </ul>
     <p v-else class="recipes-list__no-items">
