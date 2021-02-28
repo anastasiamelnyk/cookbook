@@ -1,16 +1,19 @@
 <template>
   <div>
     <Wrapper class="pt-15 home">
-      <RecipesList />
+      <RecipesList :list="recipesListFiltered" />
     </Wrapper>
     <transition name="fade">
-      <AddRecipe v-if="isAddModalShown" />
+      <AddRecipe
+        v-if="isAddModalShown"
+        @recipe-added="getRecipesList"
+      />
     </transition>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import Wrapper from '~components/common/Wrapper';
 import RecipesList from '~components/recipesList';
 import AddRecipe from './AddRecipe';
@@ -28,8 +31,18 @@ export default {
     ...mapState([
       'isAddModalShown',
     ]),
+    ...mapGetters([
+      'recipesListFiltered',
+    ]),
   },
-  methods: {},
+  created() {
+    this.getRecipesList();
+  },
+  methods: {
+    ...mapActions([
+      'getRecipesList',
+    ]),
+  },
 };
 </script>
 

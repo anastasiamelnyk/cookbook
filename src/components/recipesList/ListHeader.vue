@@ -1,33 +1,36 @@
 <template>
   <div class="list-header">
-    <Heading class="list-header__heading">
-      Your recipes
+    <Heading
+      :type="isRelated ? 'h3' : 'h2'"
+      class="list-header__heading"
+    >
+      {{ isRelated ? 'Related' : 'Your' }} recipes
     </Heading>
-    <Button @click="setAddModalShown(true)">
+    <Button @click="$emit('add-new')">
       Add new
     </Button>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
 import Heading from '~components/common/Heading';
 import Button from '~components/common/Button';
 
 export default {
   name: 'RecipesListHeader',
-  props: {},
+  props: {
+    isRelated: {
+      type: Boolean,
+      default: false,
+    },
+  },
   components: {
     Heading,
     Button,
   },
   data: () => ({}),
   computed: {},
-  methods: {
-    ...mapMutations([
-      'setAddModalShown',
-    ]),
-  },
+  methods: {},
 };
 </script>
 

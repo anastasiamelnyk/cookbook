@@ -5,6 +5,7 @@
   >
     <Add
       class="add-recipe__component"
+      @recipe-added="$emit('recipe-added')"
       @click.native.stop
     />
   </Wrapper>
@@ -36,20 +37,22 @@ export default {
 @import '~assets/scss/_variables';
 
 .add-recipe {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   min-height: 100vh;
+  height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
   background-color: rgba($black, 0.9);
+  overflow-y: auto;
 
   &__component {
     flex-grow: 1;
     background-color: #fff;
     padding: 0 16px 24px 16px;
+    height: max-content;
   }
 
   @media (min-width: $media-sm) {

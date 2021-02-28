@@ -2,7 +2,10 @@
   <button
     :type="type"
     class="button"
-    :class="{'button--add-icon': isAddIcon}"
+    :class="{
+      'button--add-icon': isAddIcon,
+      'button--bigger': isBigger
+    }"
     @click="$emit('click', $event)"
   >
     <slot />
@@ -18,6 +21,10 @@ export default {
       default: 'button',
     },
     isAddIcon: {
+      type: Boolean,
+      default: false,
+    },
+    isBigger: {
       type: Boolean,
       default: false,
     },
@@ -41,7 +48,7 @@ export default {
   font-size: 0.9rem;
   font-weight: $bold;
   color: #fff;
-  padding: 0 32px;
+  padding: 0 24px;
   height: 32px;
   flex-shrink: 0;
   cursor: pointer;
@@ -75,6 +82,12 @@ export default {
     &::after {
       transform: rotate(90deg);
     }
+  }
+
+  &--bigger {
+    padding: 0 32px;
+    height: 44px;
+    font-size: 1rem;
   }
 }
 </style>

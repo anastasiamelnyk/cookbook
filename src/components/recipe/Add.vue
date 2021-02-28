@@ -75,52 +75,54 @@
         </div>
       </li>
     </ul>
-    <div class="add__text">
-      <div>
-        <Heading type="h4" class="mb-3">
-          Description:
-        </Heading>
-        <Input
-          v-model="recipeData.description"
-          name="description"
-          placeholder="Add some description"
-          is-multiline
-          :rows="3"
-          class="add__description"
-        />
-      </div>
-      <div>
-        <Heading type="h4" class="mb-3">
-          Cooking steps:
-        </Heading>
-        <ol class="mb-2 add__steps">
-          <li
-            v-for="(step, index) in recipeData.cookingSteps"
-            :key="index"
-            class="add__step"
-          >
-            <div class="add__step-wrapper">
-              <Input
-                v-model="step.description"
-                :name="`step-${index}`"
-                is-multiline
-                placeholder="Add a cooking step"
-                :rows="3"
-                :class="{'mr-3': index === recipeData.cookingSteps.length - 1}"
-                @input="step.number = step.number ? step.number : index"
-              />
-              <Button
-                v-if="index === recipeData.cookingSteps.length - 1"
-                is-add-icon
-                class="mb-4"
-                @click="addNewStep"
-              />
-            </div>
-          </li>
-        </ol>
-      </div>
+    <div>
+      <Heading type="h4" class="mb-3">
+        Description:
+      </Heading>
+      <Input
+        v-model="recipeData.description"
+        name="description"
+        placeholder="Add some description"
+        is-multiline
+        :rows="3"
+        class="add__description"
+      />
     </div>
-    <Button class="mb-8" @click="saveRecipe">
+    <div>
+      <Heading type="h4" class="mb-3">
+        Cooking steps:
+      </Heading>
+      <ol class="mb-2 add__steps">
+        <li
+          v-for="(step, index) in recipeData.cookingSteps"
+          :key="index"
+          class="add__step"
+        >
+          <div class="add__step-wrapper">
+            <Input
+              v-model="step.description"
+              :name="`step-${index}`"
+              is-multiline
+              placeholder="Add a cooking step"
+              :rows="3"
+              :class="{'mr-3': index === recipeData.cookingSteps.length - 1}"
+              @input="step.number = step.number ? step.number : index"
+            />
+            <Button
+              v-if="index === recipeData.cookingSteps.length - 1"
+              is-add-icon
+              class="mb-4"
+              @click="addNewStep"
+            />
+          </div>
+        </li>
+      </ol>
+    </div>
+    <Button
+      is-bigger
+      class="add__save"
+      @click="saveRecipe"
+    >
       Save a recipe
     </Button>
   </section>
@@ -167,6 +169,7 @@ export default {
     ]),
     ...mapMutations([
       'setAddModalShown',
+      'setParentPath',
     ]),
     addNewStep() {
       this.recipeData.cookingSteps = [
@@ -190,7 +193,11 @@ export default {
       };
 
       this.addRecipe(recipe)
-        .then(() => { this.setAddModalShown(false) })
+        .then(() => {
+          this.setAddModalShown(false);
+          this.setParentPath('');
+          this.$emit('recipe-added');
+        })
         .catch(err => { console.log(err) });
     },
   },
@@ -203,8 +210,6 @@ export default {
 .add {
   ul,
   ol {
-    margin: 0;
-
     li::marker {
       color: $brown-black;
       font-weight: $bold;
@@ -254,6 +259,11 @@ export default {
     }
   }
 
+  &__save {
+    display: block;
+    margin: auto;
+  }
+
   @media (min-width: $media-sm) {
     &__brief {
       display: grid;
@@ -274,14 +284,6 @@ export default {
 
     &__ingredient {
       margin-bottom: 0;
-    }
-  }
-
-  @media (min-width: $media-md) {
-    &__text {
-      display: grid;
-      grid-gap: 24px;
-      grid-template-columns: repeat(2, 1fr);
     }
   }
 }
